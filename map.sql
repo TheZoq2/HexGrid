@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Nov 15, 2013 at 06:26 PM
+-- Generation Time: Nov 15, 2013 at 06:33 PM
 -- Server version: 5.6.12-log
 -- PHP Version: 5.4.12
 
@@ -19,6 +19,62 @@ SET time_zone = "+00:00";
 --
 -- Database: `map`
 --
+CREATE DATABASE IF NOT EXISTS `map` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
+USE `map`;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `base`
+--
+
+CREATE TABLE IF NOT EXISTS `base` (
+  `index` int(11) NOT NULL AUTO_INCREMENT,
+  `sizeX` int(11) DEFAULT NULL,
+  `sizeY` int(11) DEFAULT NULL,
+  PRIMARY KEY (`index`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+
+--
+-- Dumping data for table `base`
+--
+
+INSERT INTO `base` (`index`, `sizeX`, `sizeY`) VALUES
+(1, 25, 25);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `buildings`
+--
+
+CREATE TABLE IF NOT EXISTS `buildings` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `posX` int(11) DEFAULT NULL,
+  `posY` int(11) DEFAULT NULL,
+  `type` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=559 ;
+
+--
+-- Dumping data for table `buildings`
+--
+
+INSERT INTO `buildings` (`id`, `posX`, `posY`, `type`) VALUES
+(545, 8, 9, 1),
+(546, 8, 9, 1),
+(547, 22, 18, 1),
+(548, 8, 23, 1),
+(549, 8, 23, 1),
+(550, 0, 0, 0),
+(551, 8, 9, 1),
+(552, 8, 9, 1),
+(553, 8, 9, 1),
+(554, 8, 9, 1),
+(555, 0, 0, 0),
+(556, 0, 0, 0),
+(557, 0, 0, 0),
+(558, 0, 0, 0);
 
 -- --------------------------------------------------------
 
