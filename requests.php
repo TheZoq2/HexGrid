@@ -112,16 +112,18 @@
 
 		foreach ($buildings as $building) {
 			$posX = $building["posX"];
-			$posY = $builsing["posY"];
+			$posY = $building["posY"];
 			$type = $building["type"];
 
 			//Adding the building to the response string
 			$responseString .="posX=" . $posX;
 			$responseString .=",posY=" . $posY;
 			$responseString .=",type=" . $type;
-			$responseStrubg .="|";
+			$responseString .="|";
 		}
 
 		echo $responseString;
+
+		exit(); //The request has been awnsered, return
 	}
 ?>

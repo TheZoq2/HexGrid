@@ -1,6 +1,6 @@
 var grid;
-var buildings;
-var buldingSprites = Array();
+var buildings = Array();
+var buildingSprites = Array();
 var tileSprites = Array();
 
 var tileSize = 126;
@@ -60,8 +60,8 @@ function loadSprites()
 		setSpriteScale(tileSprites[i], 256, 256);
 	}
 
-	buldingSprites[0] = createSprite("img/olja.png");
-	setSpriteScale(buildingSprites[0], 256, 256);
+	buildingSprites[0] = createSprite("img/olja.png");
+	setSpriteScale(buildingSprites[0], 150, 150);
 }
 
 function drawHex()
@@ -86,11 +86,6 @@ function drawHex()
 				setSpritePosition(tileSprites[tileType], xCoord, yCoord)
 
 				drawSprite(tileSprites[tileType]);
-
-				//Showing the cordinates
-				//drawText(x + " -- " + y, xCoord, yCoord);
-
-				//grid[x][y].type = 0;
 			}
 		}
 	}
@@ -118,7 +113,12 @@ function drawBuildings()
 {
 	for(var i = 0; i < buildings.length; i++)
 	{
-		
+		var buildingType = buildings[i].type;
+		var xCoord = hexFromCordX(buildings[i].x)
+		var yCoord = hexFromCordY(buildings[i].y);
+		var sprite = buildingSprites[buildingType];
+		setSpritePosition(sprite, xCoord, yCoord);
+		drawSprite(sprite)
 	}
 }
 
@@ -184,7 +184,7 @@ function getNeighbours(xTile, yTile)
 	return result;
 }
 
-function setGridSize(xSize#F, ySize)
+function setGridSize(xSize, ySize)
 {
 	grid = Array();
 
@@ -272,4 +272,33 @@ function hexFromCordY(xCoord, yCoord)
 	}
 
 	return lowY;
+}
+
+function coordFromHexX(x, y)
+{
+	var xOffset = 0;
+	//Calculating the offset on the x axis
+	if(y % 2 == 1)
+	{
+		xOffset = tileWidth / 2;
+	}
+
+	var xCoord = x * tileWidth + xOffset;
+	var yCoord = y * tileHeight * 3/4;
+
+	return xCoord;
+}
+function coordFromHexY(xCoord, yCoord)
+{
+	var xOffset = 0;
+	//Calculating the offset on the x axis
+	if(y % 2 == 1)
+	{
+		xOffset = tileWidth / 2;
+	}
+
+	var xCoord = x * tileWidth + xOffset;
+	var yCoord = y * tileHeight * 3/4;
+
+	return yCoord;
 }

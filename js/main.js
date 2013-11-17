@@ -112,7 +112,7 @@ function handleBuildingData(data)
 		var posY = -1;
 		var type = 0;
 
-		for(var n = 0; n < varArray; n++) //Going thru all the variables in the data section
+		for(var n = 0; n < varArray.length; n++) //Going thru all the variables in the data section
 		{
 			var varType = getVarType(varArray[n]);
 			var varValue = getVarValue(varArray[n]);
@@ -132,10 +132,10 @@ function handleBuildingData(data)
 			}
 		}
 
-		if(posX != -1 && posY != -1) //Making sure tye positions are relevant
+		if(posX != -1 && posY != -1) //Making sure type and positions are relevant
 		{
 			//Adding the building to the building array
-			building[i] = {
+			buildings[i] = {
 				x: posX,
 				y: posY,
 				type: type

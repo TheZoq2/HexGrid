@@ -1,7 +1,7 @@
 <?php
     require_once("map.php");
 
-    generateMap(25, 25);
+    //generateMap(25, 25);
 ?>
 
 <!DOCTYPE html>

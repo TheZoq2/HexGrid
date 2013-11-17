@@ -45,7 +45,7 @@ function drawCanvas(){
     gameInput();
 
     drawHex();
-    draBuildings();
+    drawBuildings();
     mainLoop();
 
     timing();
@@ -55,7 +55,7 @@ function drawCanvas(){
 var timer = new Date();
 newTime = 0;
 frameTime = 0;
-var speedMod; // This constant will be used to fix lag and for timer based movment
+var speedMod; // This variable will be used to fix lag and for timer based movment
 var totalTime = 0; //This variable will be increased every time the frame is updated to keep track of the time the game has been running
 var FPS;
 
