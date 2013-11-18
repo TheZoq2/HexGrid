@@ -35,12 +35,8 @@ function mainLoop()
 					if(request.readyState == 4)
 					{
 						readyToSend = 1;
-						console.log(request.responseText)
 					}
 				}
-
-				//Requesing to create a building
-				createRequest("requests.php", "type=r_buildBuilding&posX=" + hexX + "&posY=" + hexY + "&type=1", onResponse); //Sending a request to create a building
 			}
 
 			readyToSend = 0;

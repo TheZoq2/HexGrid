@@ -1,6 +1,9 @@
 var grid;
 var buildings = Array();
 var buildingSprites = Array();
+
+var turnBuildings = Array(); //Buildings to be constructed this turn
+
 var tileSprites = Array();
 
 var tileSize = 126;
@@ -89,24 +92,6 @@ function drawHex()
 			}
 		}
 	}
-
-	//var mouseTileX = hexFromCordX(getMouseX(), getMouseY());
-	//var mouseTileY = hexFromCordY(getMouseX(), getMouseY());
-	//grid[mouseTileX, mouseTileY].type = 1;
-	//grid[mouseTileX][mouseTileY].type = 1;
-
-	//Highlighting neighbours
-	/*var closeTiles = getNeighbours(mouseTileX, mouseTileY);
-	for(var i = 0;  i < closeTiles.length; i++)
-	{
-		if(closeTiles[i].x >= 0 && closeTiles[i].x < grid.length)
-		{
-			if(closeTiles[i].y >= 0 && closeTiles[i].y < grid[closeTiles[i].x].length)
-			{
-				//grid[closeTiles[i].x][closeTiles[i].y].type = 2;
-			}
-		}
-	}*/
 }
 
 function drawBuildings()
@@ -114,8 +99,8 @@ function drawBuildings()
 	for(var i = 0; i < buildings.length; i++)
 	{
 		var buildingType = buildings[i].type;
-		var xCoord = hexFromCordX(buildings[i].x)
-		var yCoord = hexFromCordY(buildings[i].y);
+		var xCoord = coordFromHexX(buildings[i].x, buildings[i].y)
+		var yCoord = coordFromHexY(buildings[i].x, buildings[i].y);
 		var sprite = buildingSprites[buildingType];
 		setSpritePosition(sprite, xCoord, yCoord);
 		drawSprite(sprite)
@@ -288,7 +273,7 @@ function coordFromHexX(x, y)
 
 	return xCoord;
 }
-function coordFromHexY(xCoord, yCoord)
+function coordFromHexY(x, y)
 {
 	var xOffset = 0;
 	//Calculating the offset on the x axis

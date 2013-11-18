@@ -21,6 +21,7 @@
         <script src="js/main.js"></script>
         <script src="js/requests.js"></script>
         <script src="js/dataReader.js"></script>
+        <script src="js/UI.js"></script>
     </head>
     <body>
         <?php
