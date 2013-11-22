@@ -83,6 +83,15 @@ function getMouseY()
     return mouseY / getCanvasZoom() + getOffsetY();
 }
 
+function getMouseScreenX()
+{
+    return mouseX;
+}
+function getMouseScreenY()
+{
+    return mouseY;
+}
+
 function getMouseMoveX()
 {
 	var move = mouseX - oldMouseX;

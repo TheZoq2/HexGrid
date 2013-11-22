@@ -116,6 +116,58 @@ function drawSprite(ID){
     }
 }
 
+function drawSpriteToScreen(ID)
+{
+    if(sprite[ID].spritesheet == false){
+        translateDrawing(sprite[ID].xPos, sprite[ID].yPos);
+        ctx.rotate(sprite[ID].angle);
+        //Checking if the image has been loaded
+        //ctx.drawImage(sprite[ID].image, sprite[ID].xPos, sprite[ID].yPos, sprite[ID].scaleX, sprite[ID].scaleY);
+        ctx.drawImage(sprite[ID].image, 0 - calcXOffset(ID), 0 - calcYOffset(ID) , sprite[ID].scaleX, sprite[ID].scaleY);
+        translateDrawingRestore(sprite[ID].xPos, sprite[ID].yPos);
+        //ctx.scale(1/1.1, 1/1.1);
+    }else{
+        
+        //checking if the sprite is animated
+        if(sprite[ID].animating == true){
+            //Checking if the frame should change
+            if(sprite[ID].lastFrame + (1000/sprite[ID].FPS) <  totalTime){
+                //Increacing the frame
+                var cFrame = sprite[ID].frame;
+                cFrame = cFrame + 1;
+                //Making sure the frame isn't out of range
+                if(cFrame > sprite[ID].eFrame){
+                    //Checking if the sprite should loop
+                    if(sprite[ID].loop == true){
+                        cFrame = sprite[ID].sFrame;
+                    }else{
+                        //Stopping the animation
+                        sprite[ID].animating = false
+
+                        cFrame = cFrame - 1;
+                    }
+                }
+
+                sprite[ID].frame = cFrame;
+                setSpriteFrame(ID, sprite[ID].frame);
+                
+                sprite[ID].lastFrame = totalTime;
+            }
+        }
+        
+        startX = sprite[ID].frameX * sprite[ID].sizeX;
+        startY = sprite[ID].frameY * sprite[ID].sizeY;
+        /*
+        ctx.drawImage(sprite[ID].image, startX, startY, sprite[ID].sizeX, sprite[ID].sizeY, sprite[ID].xPos, sprite[ID].yPos, sprite[ID].scaleX, sprite[ID].scaleY);
+        */
+        //console.log(startX + "    " + startY + "   SizeX " + sprite[ID].sizeX + "   SizeY " + sprite[ID].sizeY + "  FrameX " + sprite[ID].frameX + "  FrameY " + sprite[ID].frameY);
+
+        translateDrawing(sprite[ID].xPos, sprite[ID].yPos);
+        ctx.rotate(sprite[ID].angle);
+        ctx.drawImage(sprite[ID].image, startX, startY , sprite[ID].sizeX, sprite[ID].sizeY, 0-calcXOffset(ID), 0-calcYOffset(ID), sprite[ID].scaleX, sprite[ID].scaleY);
+        translateDrawingRestore(sprite[ID].xPos, sprite[ID].yPos);
+    }
+}
 
 
 

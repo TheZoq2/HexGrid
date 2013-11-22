@@ -2,8 +2,12 @@ var gameState = 0; //The current state of the game
 
 var readyToSend = 1;
 
+var testButton;
+
 function mainLoop()
 {
+	drawUI();
+
 	if(gameState == 0)
 	{
 		//Requesting map data
@@ -16,6 +20,8 @@ function mainLoop()
 		createRequest("requests.php", "type=r_buildingData", function(result){
 			handleBuildingData(result);
 		});
+
+		testButton = createButton("img/UglyButton.png", xMax - 128, 128, 128, 128, 128, 128);
 
 		gameState = 1;
 	}
