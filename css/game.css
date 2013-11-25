@@ -1,0 +1,60 @@
+#UI_rightBar
+{
+	background-color: white;
+	width: 200px;
+	height: 500px;
+	position:fixed;
+
+	right: 0px;
+	top: 0px;
+
+	padding:10px;
+}
+
+#UI_controlBar
+{
+	background-color: #ffffff;
+	position: fixed;
+	width: 210px;
+	height: 210px;
+	position: fixed;
+
+	padding: 10px;
+
+	right: 0px;
+	bottom: 0px;
+}
+
+#UI_b_endTurn
+{
+	background-color: #ff0000;
+	display:block;
+	width:200px;
+	height:200px;
+
+	border-radius: 10px;
+}
+
+#UI_b_endTurn:hover
+{
+	background-color: #aa3333;
+}
+#UI_b_endTurn:active
+{
+	background-color: #33aa33;
+}
+
+.UI_buildingButton
+{
+	background-color: #FF0000;
+	width: 80px;
+	height: 80px;
+}
+.UI_buildingButton:hover
+{
+	background-color: #aa3333;
+}
+.UI_buildingButton:active
+{
+	background-color: #33aa33;
+}

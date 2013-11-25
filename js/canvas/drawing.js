@@ -31,8 +31,8 @@ function startDrawCanvas(){
     document.onkeydown = keyPressed;
     document.onkeyup = keyReleased;
 
-    document.addEventListener("mousedown", doMouseDown, false);
-    document.addEventListener("mouseup", doMouseUp, false);
+    canvas.addEventListener("mousedown", doMouseDown, false);
+    canvas.addEventListener("mouseup", doMouseUp, false);
     //Supporting scroll wheel
     document.addEventListener('DOMMouseScroll', onScroll, false)
     document.onmousewheel = onScroll; //Yeay for browsers!!!

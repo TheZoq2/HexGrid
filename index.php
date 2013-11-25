@@ -12,6 +12,7 @@
         
         <link rel="stylesheet" href="css/html5reset-1.6.1.css"/>
         <link rel="stylesheet" href="css/style.css"/>
+        <link rel="stylesheet" href="css/game.css"/>
         <script src="js/canvas/canvas.js"></script>
         <script src="js/canvas/drawing.js"></script>
         <script src="js/canvas/particleEffect.js"></script>
@@ -31,6 +32,15 @@
             <canvas ID="c_1" width="1280" height="720">
                 
             </canvas>
+        </div>
+
+        <div id="UI_rightBar">
+            <p>HEllo wolrd</p>
+        </div>
+        <div id="UI_controlBar">
+            <a id="UI_b_endTurn" href="#">
+
+            </a>
         </div>
 
         <script>

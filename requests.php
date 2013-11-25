@@ -1,6 +1,11 @@
 <?php
 	if(isset($_POST["type"]))
 	{
+		if($_POST["type"] == "r_turnData")
+		{
+			echo "makeTurn";
+			exit();
+		}
 		if($_POST["type"] == "r_mapData")
 		{
 			require_once("map.php");

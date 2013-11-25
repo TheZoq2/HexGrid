@@ -1,42 +1,24 @@
 
-buttons = Array();
+var b_endTurn;
 
-function createButton(img, x, y, scaleX, scaleY, frameWidth, frameHeight )
+function setupUI()
 {
-	SID = createSprite(img);
-	setSpritesheet(SID, frameWidth, frameHeight);
-	setSpriteScale(SID, scaleX, scaleY);
-	setSpritePosition(SID, x, y);
+	bar_right = document.getElementById("UI_rightBar");
+	//Getting HTML UI elements
+	b_endTurn = document.getElementById("UI_b_endTurn");
 
-	buttons[buttons.length] = 
+	//Giving those elements function
+	b_endTurn.onclick = endTurn;
+
+	var buildingAmount = 1;
+	//Creating building buttons
+	for(var i = 0; i < buildingAmount; i++)
 	{
-		SID: SID,
-		x: x,
-		y: y,
+		button = document.createElement("div");
+		button.setAttribute("class", "UI_buildingButton");
 
-		scaleX: scaleX,
-		scaleY: scaleY,
+		button.onclick = function(){selTool = 1; selID = 0;};
 
-		hitState: 0
-	};
-
-	return buttons.length - 1;
-}
-
-function drawUI()
-{
-	//Looping thru the button array to draw all buttons
-	for(var i = 0; i < buttons.length; i++)
-	{
-		//Updating the scale of the sprite to prevent resizing
-		setSpriteScale(buttons[i].SID, buttons[i].scaleX / getZoom(), buttons[i].scaleY / getZoom())
-
-		drawSpriteToScreen(buttons[i].SID);
+		bar_right.appendChild(button);
 	}
-}
-
-function checkButtonHit(buttonID)
-{
-	//Checking if the mouse is on the button
-	
 }

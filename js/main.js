@@ -2,12 +2,14 @@ var gameState = 0; //The current state of the game
 
 var readyToSend = 1;
 
-var testButton;
+var lastUpdateRequest = 0;
+var requestInterval = 1000; //The amount of time in miliseconds to wait before making a new uptade request
+
+var selTool = 0;
+var selID = 0;
 
 function mainLoop()
 {
-	drawUI();
-
 	if(gameState == 0)
 	{
 		//Requesting map data
@@ -21,13 +23,13 @@ function mainLoop()
 			handleBuildingData(result);
 		});
 
-		testButton = createButton("img/UglyButton.png", xMax - 128, 128, 128, 128, 128, 128);
+		setupUI();
 
 		gameState = 1;
 	}
-	if(gameState == 1)
+	if(gameState == 1) //The users turn
 	{
-		if(input.build == true && readyToSend == 1)
+		/*if(input.build == true && readyToSend == 1)
 		{
 			var hexX = hexFromCordX(getMouseX(), getMouseY());
 			var hexY = hexFromCordY(getMouseY(), getMouseY());
@@ -47,7 +49,24 @@ function mainLoop()
 
 			readyToSend = 0;
 		}
-		readyToSend = 1;
+		readyToSend = 1;*/
+
+		//if a building is selected
+		if(selTool == 1)
+		{
+			
+		}
+	}
+	if(gameState == 2) //waiting for turn
+	{
+		drawTextToScreen("totalTime " + totalTime, 20, 20);
+		if(totalTime > lastUpdateRequest + requestInterval) //Checking if an update request has been sent recently
+		{
+			//Sending a request to the server requesting turn data
+			createRequest("requests.php", "type=r_turnData", onTurnUpdate);
+
+			lastUpdateRequest = totalTime;
+		}
 	}
 }
 
@@ -144,4 +163,21 @@ function handleBuildingData(data)
 			};
 		}
 	}
+}
+
+function onTurnUpdate(data) //Function to run when a response from an update request has been sent
+{
+	if(data == "waitingForOthers") //If it is not the clients turn
+	{
+
+	}
+	else if(data == "makeTurn") //If its the clients turn
+	{
+		gameState = 1;
+	}
+}
+
+function endTurn() //This function is run when the user ends the tiurn
+{
+	gameState = 2;
 }
