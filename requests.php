@@ -1,4 +1,36 @@
 <?php
+	class Building
+	{
+		public function __construct($type, $x, $y)
+		{
+			$this->type = $type;
+			$this->x = $x;
+			$this->y = $y;
+		}
+
+		public function printData()
+		{
+			echo ("Type: " . $this->type . " xPos" . $this->x . " yPos ". $this->y);
+		}
+
+		public function getType()
+		{
+			return $this->type;
+		}
+		public function getX()
+		{
+			return $this->x;
+		}
+		public function getY()
+		{
+			return $this->y;
+		}
+
+		private $type;
+		private $x;
+		private $y;
+	}
+
 	if(isset($_POST["type"]))
 	{
 		if($_POST["type"] == "r_turnData")
@@ -69,7 +101,7 @@
 		{
 			returnBuildingData();
 		}	
-		if($_POST["type"] == "r_buildBuilding"); //Creating a new building
+		/*if($_POST["type"] == "r_buildBuilding"); //Creating a new building
 		{
 			$posX = intval($_POST["posX"]);
 			$posY = intval($_POST["posY"]);
@@ -79,6 +111,12 @@
 
 			//Exit the PHP file
 			exit();
+		}*/
+		if($_POST["type"] == "r_endTurn")
+		{
+			handleEndTurnRequest();
+
+			exit(); //Exiting the PHP code since the request has been taken care of
 		}
 	}
 
@@ -102,7 +140,6 @@
 	{
 		//Connecting to the database
 		require_once "connect.php";
-
 		$dbo = getDBO("map");
 
 		//Getting the content of the building table
@@ -130,5 +167,81 @@
 		echo $responseString;
 
 		exit(); //The request has been awnsered, return
+	}
+
+	function handleEndTurnRequest()
+	{
+		//Data about buildings is sent as a string where each building is separated by |. Each building part contains sevral data fields separated by ",".
+		//The data has a datatype and a value separated by "="
+
+		//Getting the buildings
+		$buildingStr = $_POST["buildings"];
+
+		//Spliting the building string into individual buildings
+		$buildingStrings = explode("|", $buildingStr);
+
+		//Variables to store the new building
+		$newBuildings = array();
+
+		$cBuilding = 0;
+		foreach($buildingStrings as $thisStr) //Going thru each of the buildings
+		{
+			$dataStrings = explode(",", $thisStr);
+
+			//Variables to store building data
+			$bType = -1;
+			$bX = 0;
+			$bY = 0;
+
+			foreach($dataStrings as $data)
+			{
+				//Spliting the string into datatype and value
+				$dataArray = explode("=", $data);
+				//Checking what kind of data this is
+				$dataType = $dataArray[0];
+				switch ($dataType) {
+					case 'type':
+						$bType = intval( $dataArray[1] );
+
+						break;
+					case 'xPos':
+						$bX = intval($dataArray[1]);
+						break;
+					case 'yPos':
+						$bY = intval($dataArray[1]);
+						break;
+					default:
+						# code...
+						break;
+				}
+			}
+
+			if($bType != -1) //Making sure the type actually exists
+			{
+				$newBuildings[$cBuilding] = new Building($bType, $bX, $bY);
+			}
+			$cBuilding++;
+		}
+
+		//Preparing to send a request to the server
+		require_once("connect.php");
+		$dbo = getDBO("map");
+
+		$sqlRequest = "INSERT INTO `buildings`(`id`, `posX`, `posY`, `type`) VALUES ('',:xPos,:yPos,:type)";
+		$stmt = $dbo->prepare($sqlRequest);
+
+
+		//Looping through all the buildings
+		foreach($newBuildings as $building)
+		{
+			$type = $building->getType();
+			$x = $building->getX();
+			$y = $building->getY();
+			$stmt->bindParam(":type", $type);
+			$stmt->bindParam(":xPos", $x);
+			$stmt->bindParam(":yPos", $y);
+
+			$stmt->execute();
+		}
 	}
 ?>

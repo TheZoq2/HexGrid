@@ -1,7 +1,7 @@
 <?php
     require_once("map.php");
 
-    //generateMap(25, 25);
+    generateMap(25, 25);
 ?>
 
 <!DOCTYPE html>
@@ -25,9 +25,6 @@
         <script src="js/UI.js"></script>
     </head>
     <body>
-        <?php
-            printMap();
-        ?>
         <div class="wrapper">
             <canvas ID="c_1" width="1280" height="720">
                 
@@ -35,7 +32,6 @@
         </div>
 
         <div id="UI_rightBar">
-            <p>HEllo wolrd</p>
         </div>
         <div id="UI_controlBar">
             <a id="UI_b_endTurn" href="#">

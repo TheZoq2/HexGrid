@@ -12,16 +12,7 @@ function mainLoop()
 {
 	if(gameState == 0)
 	{
-		//Requesting map data
-
-		createRequest("requests.php", "type=r_mapData", function(result){
-			handleMapData(result);
-		});
-
-		//Requesting building data
-		createRequest("requests.php", "type=r_buildingData", function(result){
-			handleBuildingData(result);
-		});
+		requestMap();
 
 		setupUI();
 
@@ -54,7 +45,23 @@ function mainLoop()
 		//if a building is selected
 		if(selTool == 1)
 		{
-			
+			drawTextToScreen("Current selected: " + selID, 20, 20);	
+			//Getting the current cordinates
+			var xHex = hexFromCordX(getMouseX(), getMouseY());
+			var yHex = hexFromCordY(getMouseX(), getMouseY());
+			var xCoord = coordFromHexX(xHex, yHex);
+			var yCoord = coordFromHexY(xHex, yHex);
+			drawTextToScreen("xCoord: " + xCoord, 20, 40);
+			//Placing a building ghost at the cordinates
+			setSpritePosition(buildingData[selID].SID, xCoord, yCoord);
+			drawSprite(buildingData[selID].SID);
+
+			//Checking if the player wants to place the building
+			if(getMouseClick() == 1)
+			{
+				addTurnBuilding(selID, xHex, yHex);
+			}
+
 		}
 	}
 	if(gameState == 2) //waiting for turn
@@ -70,6 +77,20 @@ function mainLoop()
 	}
 }
 
+function requestMap()
+{
+	//Requesting map data
+
+	createRequest("requests.php", "type=r_mapData", function(result){
+		handleMapData(result);
+	});
+
+	//Requesting building data
+	createRequest("requests.php", "type=r_buildingData", function(result){
+		handleBuildingData(result);
+	});
+}
+
 function handleMapData(data) //Takes care of map data that is returned from the server
 {
 	//Separating the data in the result
@@ -81,8 +102,6 @@ function handleMapData(data) //Takes care of map data that is returned from the 
 	{
 		var varType = getVarType(varArray[i]);
 		var varValue = getVarValue(varArray[i]);
-
-		console.log("Vartype " + varType + " Var value: " + varValue);
 	}
 
 	for(var i = 1; i < strings.length; i++) //Reading the actual map data from the result
@@ -149,7 +168,7 @@ function handleBuildingData(data)
 
 			if(varType == "type")
 			{
-				type = parseInt(type);
+				type = parseInt(varValue);
 			}
 		}
 
@@ -177,7 +196,32 @@ function onTurnUpdate(data) //Function to run when a response from an update req
 	}
 }
 
+var endRequest;
+
 function endTurn() //This function is run when the user ends the tiurn
 {
+	//Sending data about new buildings created this turn
+	var endTurnRequest = "type=r_endTurn&buildings=";
+	for(var i = 0; i < getTurnBuildingAmount(); i++)
+	{
+		var turnBuilding = getTurnBuildingAt(i);
+		endTurnRequest += "type=" + turnBuilding.type + ",";
+		endTurnRequest += "xPos=" + turnBuilding.x + ",";
+		endTurnRequest += "yPos=" + turnBuilding.y;
+
+		endTurnRequest += "|"
+	}
+
+	//Sending that data
+	endRequest = createRequest("requests.php", endTurnRequest, function(response){
+		console.log(response);
+
+		//Sending a request for the updated map
+		requestMap();
+	});
+
+	//Clearing buildings constructed this turn
+	turnBuildings = Array();
+
 	gameState = 2;
 }

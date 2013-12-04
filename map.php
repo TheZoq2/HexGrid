@@ -29,7 +29,7 @@
 
 				if(rand(0,20) == 1)
 				{
-					$map[$y][$x]->setType(0);
+					$map[$y][$x]->setType(2);
 				}
 				else
 				{

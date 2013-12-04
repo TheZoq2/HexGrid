@@ -1,6 +1,6 @@
 var grid;
 var buildings = Array();
-var buildingSprites = Array();
+var buildingData = Array();
 
 var turnBuildings = Array(); //Buildings to be constructed this turn
 
@@ -36,7 +36,7 @@ function setupHex()
 	{
 		for(var x = 0; x < grid[y].length; x++)
 		{
-			grid[x][y].type = Math.floor(Math.random() * 2)
+			//grid[x][y].type = Math.floor(Math.random() * 2);
 		}
 	}
 }
@@ -44,11 +44,11 @@ function loadSprites()
 {
 	var outline = true;
 	
-	tileSprites[0] = createSprite("img/low/HexTile.png");
+	tileSprites[0] = createSprite("img/OilTile.png");
 	setSpriteScale(tileSprites[0], 256, 256);
-	tileSprites[1] = createSprite("img/low/GrassTile.png");
+	tileSprites[1] = createSprite("img/DirtTile.png");
 	setSpriteScale(tileSprites[1], 256, 256);
-	tileSprites[2] = createSprite("img/low/RedTile.png");
+	tileSprites[2] = createSprite("img/OilTile.png");
 	setSpriteScale(tileSprites[2], 256, 256);
 	
 	if(outline == true)
@@ -63,8 +63,32 @@ function loadSprites()
 		setSpriteScale(tileSprites[i], 256, 256);
 	}
 
-	buildingSprites[0] = createSprite("img/olja.png");
-	setSpriteScale(buildingSprites[0], 150, 150);
+	//Setting data for the buildings
+
+	//Satelite
+	var sprite = createSprite("img/satelite.png");
+	setSpriteScale(sprite, 256, 256);
+	buildingData[0] = {
+		SID: sprite,
+		reqTiles: [],
+		reqNeighbours: []
+	};
+	//Oil rig thing
+	sprite = createSprite("img/olja.png");
+	setSpriteScale(sprite, 200, 200);
+	buildingData[1] = {
+		SID: sprite,
+		reqTiles: [2],
+		reqNeighbours: []
+	};
+	//Oil rig thing
+	sprite = createSprite("img/Building3.png");
+	setSpriteScale(sprite, 240, 240);
+	buildingData[2] = {
+		SID: sprite,
+		reqTiles: [],
+		reqNeighbours: [1]
+	};
 }
 
 function drawHex()
@@ -92,6 +116,11 @@ function drawHex()
 			}
 		}
 	}
+
+	//DEBUG:
+	var coordX = hexFromCordX(getMouseX(), getMouseY());
+	var coordY = hexFromCordY(getMouseX(), getMouseY());
+	drawTextToScreen("Tile type: " + grid[coordX][coordY].type, 20, 60);
 }
 
 function drawBuildings()
@@ -101,10 +130,105 @@ function drawBuildings()
 		var buildingType = buildings[i].type;
 		var xCoord = coordFromHexX(buildings[i].x, buildings[i].y)
 		var yCoord = coordFromHexY(buildings[i].x, buildings[i].y);
-		var sprite = buildingSprites[buildingType];
+		var sprite = buildingData[buildingType].SID;
 		setSpritePosition(sprite, xCoord, yCoord);
 		drawSprite(sprite)
 	}
+
+	//Drawing buildings added this turn
+	for(var i = 0; i < turnBuildings.length; i++)
+	{
+		var buildingType = turnBuildings[i].type;
+		var xCoord = coordFromHexX(turnBuildings[i].x, turnBuildings[i].y)
+		var yCoord = coordFromHexY(turnBuildings[i].x, turnBuildings[i].y);
+		var sprite = buildingData[buildingType].SID;
+		setSpritePosition(sprite, xCoord, yCoord);
+		drawSprite(sprite);
+	}
+}
+
+function addTurnBuilding(type, x, y)
+{
+	var canBePlaced = true;
+	//Checking if the building can be placed in the tile
+	var building = buildingData[type];
+
+	if(building.reqTiles.length == 0) //If the building has no special tile requirements
+	{
+		
+	}
+	else
+	{
+		var correctTile = false;
+		//Checking the tiles that the building can be placed on
+		for(var i = 0; i < building.reqTiles.length; i++)
+		{
+			//Getting the type of the tile
+			if(grid[x][y].type == building.reqTiles[i])
+			{
+				correctTile = true;
+			}
+
+			console.log(building.reqTiles[i]);
+		}
+
+		if(correctTile == false)
+		{
+			canBePlaced = false;
+		}
+	}
+
+	//Checking if the building requires any neighbours nearby
+	if(buildingData[type].reqNeighbours.length == 0)
+	{
+		
+	}
+	else
+	{
+		var correctNeighbour = false;
+		for(var i = 0; i < buildingData[type].reqNeighbours.length; i++)
+		{
+			for(var b = 0; b < buildings.length; b++)
+			{
+				if(buildings[b].type == buildingData[type].reqNeighbours[i])
+				{
+					//Checking if the building is a neighbour to the tile the building should be placed at
+					var cNeighbours = getNeighbours(x, y);
+
+					for(var n = 0; n < cNeighbours.length; n++)
+					{
+						if(buildings[b].x == cNeighbours[n].x && buildings[b].y == cNeighbours[n].y)
+						{
+							console.log("It works?");
+							correctNeighbour = true;
+						}
+					}
+				}
+			}
+		}
+		if(correctNeighbour == false)
+		{
+			canBePlaced = false;
+		}
+	}
+
+	//If the tile can be placed
+	if(canBePlaced)
+	{
+		turnBuildings[turnBuildings.length] = {
+			type: type,
+			x: x,
+			y: y
+		};
+	}
+}
+function getTurnBuildingAmount()
+{
+	return turnBuildings.length;
+}
+function getTurnBuildingAt(index)
+{
+	return turnBuildings[index];
 }
 
 function gameInput()
@@ -287,3 +411,4 @@ function coordFromHexY(x, y)
 
 	return yCoord;
 }
+

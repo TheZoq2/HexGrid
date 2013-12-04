@@ -24,10 +24,14 @@ var oldMouseY = 0;
 var mouseHoldTime = 200;
 var mouseDown = false;
 var mouseHeld = false;
+var mouseClick = false;
 var mouseHeldFor;
 var mouseHoldStart;
 var mouseClick = false;
 var frameScroll;
+var releaseTime;
+var clickX;
+var clickY;
 function updateInput() //Call this to get all mouse hold features working
 {
 	oldMouseX = mouseFrameX;
@@ -47,6 +51,11 @@ function updateInput() //Call this to get all mouse hold features working
 		}
 	}
 
+	if(releaseTime != totalTime)
+	{
+		mouseClick = false;
+	}
+
 	//Calculating the mouse movement
     frameScroll = scrollAmount; //Saving the amount scrolled this frame
     scrollAmount = 0;//Restoring the scroll for next frame
@@ -56,6 +65,10 @@ function doMouseDown(e)
 {
     mouseHeld = true;
 
+    //Saving the location of the click
+    clickX = getMouseX();
+    clickY = getMouseY();
+
     mouseHoldStart = totalTime;
 }
 function doMouseUp(e)
@@ -64,15 +77,21 @@ function doMouseUp(e)
 
     mouseDown = false;
 
-    if(mouseHeldFor < mouseHoldTime)
+    if(mouseHeldFor < mouseHoldTime && clickX == getMouseX() && clickY == getMouseY())
     {
     	mouseClick = true;
+
+    	releaseTime = totalTime;
     }
 }
 
 function getMouseDown()
 {
 	return mouseDown;
+}
+function getMouseClick()
+{
+	return mouseClick;
 }
 function getMouseX()
 {

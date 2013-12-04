@@ -47,8 +47,10 @@
 .UI_buildingButton
 {
 	background-color: #FF0000;
-	width: 80px;
-	height: 80px;
+	width: 60px;
+	height: 60px;
+	float: left;
+	margin: 5px;
 }
 .UI_buildingButton:hover
 {
