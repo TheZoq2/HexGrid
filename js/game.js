@@ -1,6 +1,7 @@
 var grid;
 var buildings = Array();
 var buildingData = Array();
+var borderSprite;
 
 var turnBuildings = Array(); //Buildings to be constructed this turn
 
@@ -44,13 +45,18 @@ function loadSprites()
 {
 	var outline = true;
 	
-	tileSprites[0] = createSprite("img/OilTile.png");
+	borderSprite = createSprite("img/TileBorder.png");
+	setSpriteScale(borderSprite, 256, 256);
+
+	tileSprites[0] = createSprite("img/GrassTile.png");
 	setSpriteScale(tileSprites[0], 256, 256);
-	tileSprites[1] = createSprite("img/DirtTile.png");
+	tileSprites[1] = createSprite("img/Ground.png");
 	setSpriteScale(tileSprites[1], 256, 256);
-	tileSprites[2] = createSprite("img/OilTile.png");
+	tileSprites[2] = createSprite("img/GroundOil.png");
 	setSpriteScale(tileSprites[2], 256, 256);
-	
+	tileSprites[3] = createSprite("img/GroundCrystal.png");
+	setSpriteScale(tileSprites[3], 256, 256);
+
 	if(outline == true)
 	{
 		//tileSprites[0] = createSprite("img/low/TileTrans.png");
@@ -87,7 +93,7 @@ function loadSprites()
 	buildingData[2] = {
 		SID: sprite,
 		reqTiles: [],
-		reqNeighbours: [1]
+		reqNeighbours: [0]
 	};
 }
 
@@ -110,17 +116,14 @@ function drawHex()
 			if(xCoord > getScreenStartX() - tileWidth && xCoord < getScreenEndX() + tileWidth && yCoord > getScreenStartY() - tileHeight && yCoord < getScreenEndY() + tileHeight)
 			{
 				var tileType = grid[x][y].type;
-				setSpritePosition(tileSprites[tileType], xCoord, yCoord)
+				setSpritePosition(tileSprites[tileType], xCoord, yCoord);
+				setSpritePosition(borderSprite, xCoord, yCoord);
 
 				drawSprite(tileSprites[tileType]);
+				drawSprite(borderSprite);
 			}
 		}
 	}
-
-	//DEBUG:
-	var coordX = hexFromCordX(getMouseX(), getMouseY());
-	var coordY = hexFromCordY(getMouseX(), getMouseY());
-	drawTextToScreen("Tile type: " + grid[coordX][coordY].type, 20, 60);
 }
 
 function drawBuildings()
@@ -199,7 +202,6 @@ function addTurnBuilding(type, x, y)
 					{
 						if(buildings[b].x == cNeighbours[n].x && buildings[b].y == cNeighbours[n].y)
 						{
-							console.log("It works?");
 							correctNeighbour = true;
 						}
 					}

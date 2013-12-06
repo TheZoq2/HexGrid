@@ -31,6 +31,10 @@
 				{
 					$map[$y][$x]->setType(2);
 				}
+				elseif(rand(0, 20) == 1)
+				{
+					$map[$y][$x]->setType(3);
+				}
 				else
 				{
 					$map[$y][$x]->setType(1);
