@@ -5,6 +5,9 @@ var readyToSend = 1;
 var lastUpdateRequest = 0;
 var requestInterval = 1000; //The amount of time in miliseconds to wait before making a new uptade request
 
+var lastMapRequest = 0;
+var mapUpdateInterval = 2000;
+
 var selTool = 0;
 var selID = 0;
 
@@ -16,31 +19,11 @@ function mainLoop()
 
 		setupUI();
 
-		gameState = 1;
+		gameState = 2; //Waiting for a turn
 	}
 	if(gameState == 1) //The users turn
 	{
-		/*if(input.build == true && readyToSend == 1)
-		{
-			var hexX = hexFromCordX(getMouseX(), getMouseY());
-			var hexY = hexFromCordY(getMouseY(), getMouseY());
-
-			//console.log(hexFromCordX(5));
-
-			if(hexX != -1 && hexY != -1)
-			{
-				function onResponse()
-				{
-					if(request.readyState == 4)
-					{
-						readyToSend = 1;
-					}
-				}
-			}
-
-			readyToSend = 0;
-		}
-		readyToSend = 1;*/
+		showUI();
 
 		//if a building is selected
 		if(selTool == 1)
@@ -66,7 +49,6 @@ function mainLoop()
 	}
 	if(gameState == 2) //waiting for turn
 	{
-		drawTextToScreen("totalTime " + totalTime, 20, 20);
 		if(totalTime > lastUpdateRequest + requestInterval) //Checking if an update request has been sent recently
 		{
 			//Sending a request to the server requesting turn data
@@ -74,6 +56,16 @@ function mainLoop()
 
 			lastUpdateRequest = totalTime;
 		}
+
+		if(totalTime > lastMapRequest + mapUpdateInterval)
+		{
+			requestMap();
+
+			lastMapRequest = totalTime;
+		}
+
+		//Hiding the UI so the user can't use the end turn button when its not their turn
+		hideUI();
 	}
 }
 
@@ -194,6 +186,8 @@ function onTurnUpdate(data) //Function to run when a response from an update req
 	{
 		gameState = 1;
 	}
+
+	requestMap(); //Sending a request for the updated map
 }
 
 var endRequest;

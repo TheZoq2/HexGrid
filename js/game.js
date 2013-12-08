@@ -95,6 +95,13 @@ function loadSprites()
 		reqTiles: [],
 		reqNeighbours: [0]
 	};
+	sprite = createSprite("img/GroundCrystalMine.png");
+	setSpriteScale(sprite, 256, 256);
+	buildingData[3] = {
+		SID: sprite,
+		reqTiles: [3],
+		reqNeighbours: [0]
+	};
 }
 
 function drawHex()

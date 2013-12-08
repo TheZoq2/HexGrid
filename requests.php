@@ -31,11 +31,25 @@
 		private $y;
 	}
 
+	session_start();
+
 	if(isset($_POST["type"]))
 	{
 		if($_POST["type"] == "r_turnData")
 		{
-			echo "makeTurn";
+			//Checking which player should make the turn
+
+			require_once("connect.php");
+			$dbo = getDBO("map");
+			$sqlRequest = "SELECT * FROM `base` WHERE 1";
+			$stmt = $dbo->prepare($sqlRequest);
+			$stmt->execute();
+
+			$result = $stmt->fetch();
+			if($result["currentTurn"] == $_SESSION["Player"])
+			{
+				echo "makeTurn"; //Tell the client that its its turn
+			}
 			exit();
 		}
 		if($_POST["type"] == "r_mapData")
@@ -100,6 +114,8 @@
 		if($_POST["type"] == "r_buildingData")
 		{
 			returnBuildingData();
+
+			exit();
 		}	
 		/*if($_POST["type"] == "r_buildBuilding"); //Creating a new building
 		{
@@ -227,21 +243,96 @@
 		require_once("connect.php");
 		$dbo = getDBO("map");
 
-		$sqlRequest = "INSERT INTO `buildings`(`id`, `posX`, `posY`, `type`) VALUES ('',:xPos,:yPos,:type)";
+		$sqlRequest = "INSERT INTO `buildings`(`id`, `posX`, `posY`, `type`, `owner`) VALUES ('',:xPos,:yPos,:type,:owner)";
 		$stmt = $dbo->prepare($sqlRequest);
-
 
 		//Looping through all the buildings
 		foreach($newBuildings as $building)
 		{
+			$owner = $_SESSION["Player"];
 			$type = $building->getType();
 			$x = $building->getX();
 			$y = $building->getY();
 			$stmt->bindParam(":type", $type);
 			$stmt->bindParam(":xPos", $x);
 			$stmt->bindParam(":yPos", $y);
+			$stmt->bindParam(":owner", $owner);
 
 			$stmt->execute();
 		}
+
+		selectNextPlayer();
+	}
+
+	function selectNextPlayer() //Selects the next player to make a turn
+	{
+		//Checking which player was making the last turn
+		require_once("connect.php");
+		$dbo = getDBO("map");
+		$sqlRequest = "SELECT * FROM `base` WHERE 1";
+		$stmt = $dbo->prepare($sqlRequest);
+
+		$stmt->execute();
+		$result = $stmt->fetch();
+
+		$lastPlayer = $result["currentTurn"];
+
+		//Getting the list of players
+		$dbo = getDBO("map");
+		$sqlRequest = "SELECT * FROM `players` WHERE 1 ORDER BY `ID`";
+		$stmt = $dbo->prepare($sqlRequest);
+		$stmt->execute();
+
+		$players = $stmt->fetchAll();
+
+		//Checking if the last player is part of the player list
+
+		$lastExists = false;
+		foreach($players as $player)
+		{
+			if($player["Name"] == $lastPlayer)
+			{
+				$lastExists = true;
+			}
+		}
+
+		if($lastExists == false) //The last player does not exist anymore, give the turn to the first player
+		{
+			setNextPlayer($players[0]["Name"]);
+		}
+		else
+		{
+			//The player is still in the game, select the next player
+
+			//Finding the index of the player
+			$playerIndex = 0;
+			for($i = 0; $i < count($players); $i++)
+			{
+				if($players[$i]["Name"] == $lastPlayer)
+				{
+					$playerIndex = $i;
+				}
+			}
+
+			$nextIndex = $playerIndex + 1;
+			if($nextIndex >= count($players)) //If there are more players after the current one
+			{
+				$nextIndex = 0; //Selelcting the first player in the list	
+			}
+
+			setNextPlayer($players[$nextIndex]["Name"]);
+		}
+
+	}
+
+	function setNextPlayer($name)
+	{
+		require_once("connect.php");
+
+		$dbo = getDBO("map");
+		$sqlRequest = "UPDATE `base` SET `currentTurn`=:player WHERE 1";
+		$stmt = $dbo->prepare($sqlRequest);
+		$stmt->bindParam(":player", $name);
+		$stmt->execute();
 	}
 ?>

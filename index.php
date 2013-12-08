@@ -1,7 +1,17 @@
 <?php
     require_once("map.php");
 
-    //generateMap(25, 25);
+    //generateMap(15, 15);
+
+    //Checking if the client has a player
+    session_start();
+
+    if(isset($_SESSION["Player"]) == false)
+    {
+        //Go to registration
+        header('Location:player.php');
+    }
+
 ?>
 
 <!DOCTYPE html>

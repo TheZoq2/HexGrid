@@ -41,7 +41,6 @@
 				}
 			}
 		}
-
 		//Database
 		require_once "connect.php";
 
@@ -53,12 +52,29 @@
 		$stmt = $dbh->prepare($sqlRequest);
 		$stmt->execute();
 
-		$cID = 0;
+		$cID = 1;
+
+		//$sqlRequest = "UPDATE `tile` SET `posX`=:posX,`posY`=:posY,`type`=:type WHERE `id`=:ID;";
+		//$stmt = $dbh->prepare($sqlRequest);
+
 		for($y = 0; $y < $sizeY; $y++)
 		{
 			for($x = 0; $x < $sizeX; $x++)
 			{
-				$sqlRequest = "UPDATE `tile` SET `type`=" . $map[$x][$y]->getType() . " WHERE `id`=" . $cID . ";";
+				$type = $map[$x][$y]->getType();
+				$ID = $cID;
+				
+				/*
+				//Setting the parameters for the SQL request
+				$stmt->bindParam(":type", $ID);
+				$stmt->bindParam(":ID", $ID);
+				$stmt->bindParam(":posX", $x);
+				$stmt->bindParam(":posY", $y);
+
+				$stmt->execute();
+				*/
+
+				$sqlRequest = "UPDATE `tile` SET `posX`=" . $x . ",`posY`= " . $y . ",`type`=" . $type . " WHERE `id`=" . $cID . ";";
 				$stmt = $dbh->prepare($sqlRequest);
 				$stmt->execute();
 

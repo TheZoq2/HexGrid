@@ -10,7 +10,7 @@ function setupUI()
 	//Giving those elements function
 	b_endTurn.onclick = endTurn;
 
-	var buildingAmount = 3;
+	var buildingAmount = 4;
 	//Creating building buttons
 	for(var i = 0; i < buildingAmount; i++)
 	{
@@ -32,4 +32,24 @@ function setupUI()
 
 		bar_right.appendChild(button);
 	}
+}
+
+function hideUI()
+{
+	bar_right = document.getElementById("UI_rightBar");
+	//Getting HTML UI elements
+	bar_control = document.getElementById("UI_controlBar");
+
+	bar_right.style.visibility = "hidden";
+	bar_control.style.visibility = "hidden";
+}
+
+function showUI()
+{
+	bar_right = document.getElementById("UI_rightBar");
+	//Getting HTML UI elements
+	bar_control = document.getElementById("UI_controlBar");
+
+	bar_right.style.visibility = "visible";
+	bar_control.style.visibility = "visible";
 }
