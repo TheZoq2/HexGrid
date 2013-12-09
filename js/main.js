@@ -219,3 +219,37 @@ function endTurn() //This function is run when the user ends the tiurn
 
 	gameState = 2;
 }
+
+function exitGame()
+{
+	closeRequest = createRequest("requests.php", "type=r_exit", function(data){alert(data)});
+
+	request = new XMLHttpRequest();
+
+	request.open("POST", "requests.php", false);
+	request.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+	request.send("type=r_exit");
+
+	request.onreadystatechange = function()
+	{
+		if(this.readyState == 4) //If the response is ready
+		{
+			respond(this.responseText);
+		}
+	}
+
+	//Saving the request
+	requests[requests.length] = 
+	{
+		request: request,
+
+		onFinished: onFinished
+	};
+
+	return NULL;
+}
+
+function respond(data)
+{
+	alert(data);
+}

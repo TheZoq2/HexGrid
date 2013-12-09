@@ -134,6 +134,15 @@
 
 			exit(); //Exiting the PHP code since the request has been taken care of
 		}
+		if($_POST["type"] == "r_exit")
+		{
+			//Removing the player from the database
+			removePlayer($_SESSION["Player"]);
+
+			unset($_SESSION["Player"]);
+
+			exit();
+		}
 	}
 
 	echo "error_noType";
@@ -333,6 +342,17 @@
 		$sqlRequest = "UPDATE `base` SET `currentTurn`=:player WHERE 1";
 		$stmt = $dbo->prepare($sqlRequest);
 		$stmt->bindParam(":player", $name);
+		$stmt->execute();
+	}
+
+	function removePlayer($name)
+	{
+		require_once("connect.php");
+
+		$dbo = getDBO("map");
+		$sqlRequest = "DELETE FROM `players` WHERE `Name`=:name";
+		$stmt = $dbo->prepare($sqlRequest);
+		$stmt->bindParam(":name", $name);
 		$stmt->execute();
 	}
 ?>

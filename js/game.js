@@ -40,6 +40,8 @@ function setupHex()
 			//grid[x][y].type = Math.floor(Math.random() * 2);
 		}
 	}
+
+	window.onbeforeunload = exitGame;
 }
 function loadSprites()
 {
