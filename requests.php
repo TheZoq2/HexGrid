@@ -38,6 +38,11 @@
 		if($_POST["type"] == "r_turnData")
 		{
 			//Checking which player should make the turn
+			if(getLastPlayerExists() == false)
+			{
+				selectNextPlayer();
+			}
+
 
 			require_once("connect.php");
 			$dbo = getDBO("map");
@@ -354,5 +359,41 @@
 		$stmt = $dbo->prepare($sqlRequest);
 		$stmt->bindParam(":name", $name);
 		$stmt->execute();
+	}
+
+	function getLastPlayerExists()
+	{
+		//Connecting to the database
+		//Checking which player was making the last turn
+		require_once("connect.php");
+		$dbo = getDBO("map");
+		$sqlRequest = "SELECT * FROM `base` WHERE 1";
+		$stmt = $dbo->prepare($sqlRequest);
+
+		$stmt->execute();
+		$result = $stmt->fetch();
+
+		$lastPlayer = $result["currentTurn"];
+
+		//Getting the list of players
+		$dbo = getDBO("map");
+		$sqlRequest = "SELECT * FROM `players` WHERE 1 ORDER BY `ID`";
+		$stmt = $dbo->prepare($sqlRequest);
+		$stmt->execute();
+
+		$players = $stmt->fetchAll();
+
+		//Checking if the last player is part of the player list
+
+		$lastExists = false;
+		foreach($players as $player)
+		{
+			if($player["Name"] == $lastPlayer)
+			{
+				$lastExists = true;
+			}
+		}
+
+		return $lastExists;
 	}
 ?>

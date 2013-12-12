@@ -40,13 +40,15 @@
                 
             </canvas>
         </div>
-
         <div id="UI_rightBar">
         </div>
         <div id="UI_controlBar">
             <a id="UI_b_endTurn" href="#">
 
             </a>
+
+            <div id="UI_resources">
+            </div>
         </div>
 
         <script>

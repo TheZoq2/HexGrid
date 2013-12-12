@@ -222,11 +222,11 @@ function endTurn() //This function is run when the user ends the tiurn
 
 function exitGame()
 {
-	closeRequest = createRequest("requests.php", "type=r_exit", function(data){alert(data)});
+	closeRequest = createRequest("requests.php", "type=r_exit", function(data){});
 
 	request = new XMLHttpRequest();
 
-	request.open("POST", "requests.php", false);
+	request.open("POST", "requests.php", true);
 	request.setRequestHeader("Content-type","application/x-www-form-urlencoded");
 	request.send("type=r_exit");
 
@@ -247,9 +247,4 @@ function exitGame()
 	};
 
 	return NULL;
-}
-
-function respond(data)
-{
-	alert(data);
 }

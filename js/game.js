@@ -41,7 +41,7 @@ function setupHex()
 		}
 	}
 
-	window.onbeforeunload = exitGame;
+	window.onclose = exitGame;
 }
 function loadSprites()
 {
