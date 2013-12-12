@@ -40,15 +40,20 @@
                 
             </canvas>
         </div>
+
+        <div id="UI_resources">
+            <div class="UI_resource"><p class="UI_resource_p"><img src="img/UI/Apple.png"/> :0</p></div>
+            <div class="UI_resource"><p class="UI_resource_p"><img src="img/UI/Ingot.png"/> :0</p></div>
+            <div class="UI_resource"><p class="UI_resource_p"><img src="img/UI/Crystal.png"/> :0</p></div>
+            <div class="UI_resource"><p class="UI_resource_p"><img src="img/UI/Oil.png"/> :0</p></div>
+        </div>
+
         <div id="UI_rightBar">
         </div>
         <div id="UI_controlBar">
             <a id="UI_b_endTurn" href="#">
 
             </a>
-
-            <div id="UI_resources">
-            </div>
         </div>
 
         <script>

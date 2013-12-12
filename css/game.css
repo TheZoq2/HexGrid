@@ -27,10 +27,22 @@
 
 #UI_resources
 {
+	position:fixed;
 	width: 100%;
-	height: 150px;
+	height: 32px;
+	top: 0px;
+	left: 0px;
 
-	background-color: #ff0000;
+	background-color: #ffffff;
+}
+.UI_resource
+{
+	float: left;
+	width: 100px;
+}
+.UI_resource_p
+{
+	font-size: 32px;
 }
 
 #UI_b_endTurn

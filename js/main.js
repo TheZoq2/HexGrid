@@ -226,7 +226,7 @@ function exitGame()
 
 	request = new XMLHttpRequest();
 
-	request.open("POST", "requests.php", true);
+	request.open("POST", "requests.php", false);
 	request.setRequestHeader("Content-type","application/x-www-form-urlencoded");
 	request.send("type=r_exit");
 
