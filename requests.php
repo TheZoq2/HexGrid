@@ -121,7 +121,12 @@
 			returnBuildingData();
 
 			exit();
-		}	
+		}
+		if($_POST["type"] == "r_resourceData")
+		{
+			returnResourceData();
+			exit();
+		}
 		/*if($_POST["type"] == "r_buildBuilding"); //Creating a new building
 		{
 			$posX = intval($_POST["posX"]);
@@ -199,6 +204,30 @@
 		exit(); //The request has been awnsered, return
 	}
 
+	function returnResourceData()
+	{
+		$result = "";
+
+		//Fetching the data from the server
+		require_once("connect.php");
+		$dbo = getDBO("map");
+
+		$sqlRequest = "SELECT * FROM `players` WHERE `Name`=:name";
+		$stmt = $dbo->prepare($sqlRequest);
+		$stmt->bindParam(":name", $_SESSION["Player"]);
+		$stmt->execute();
+		$sqlResult = $stmt->fetch();
+
+
+
+		$result .= "food=" . $sqlResult["food"]. ",";
+		$result .= "metal=" . $sqlResult["metal"]. ",";
+		$result .= "oil=" . $sqlResult["oil"] . ",";
+		$result .= "crystal=" . $sqlResult["crystal"];
+
+		echo $result;
+	}
+
 	function handleEndTurnRequest()
 	{
 		//Data about buildings is sent as a string where each building is separated by |. Each building part contains sevral data fields separated by ",".
@@ -260,6 +289,10 @@
 		$sqlRequest = "INSERT INTO `buildings`(`id`, `posX`, `posY`, `type`, `owner`) VALUES ('',:xPos,:yPos,:type,:owner)";
 		$stmt = $dbo->prepare($sqlRequest);
 
+		require_once("map.php");
+		$costSql = "UPDATE `players` SET `oil`=:oil,`crystal`=:crystal,`metal`=:metal,`food`=:food WHERE `Name`=:name";
+		$costStmt = $dbo->prepare($costSql);
+		$costStmt->bindParam(":name", $_SESSION["Player"]);
 		//Looping through all the buildings
 		foreach($newBuildings as $building)
 		{
@@ -272,10 +305,38 @@
 			$stmt->bindParam(":yPos", $y);
 			$stmt->bindParam(":owner", $owner);
 
+			//Removing the cost of the buildings
+			$plrResources = getPlayerData($_SESSION["Player"]);
+
+			$bData = $buildingData[$type];
+			$oilCost = $plrResources["oil"] - $bData->getOil();
+			$crystalCost = $plrResources["crystal"] - $bData->getCrystal();
+			$metalCost = $plrResources["metal"] - $bData->getMetal();
+			$foodCost = $plrResources["food"] - $bData->getFood();
+
+			$costStmt->bindParam(":oil", $oilCost);
+			$costStmt->bindParam(":crystal", $crystalCost);
+			$costStmt->bindParam(":metal", $metalCost);
+			$costStmt->bindParam(":food", $foodCost);
+			$costStmt->execute();
+
 			$stmt->execute();
 		}
 
 		selectNextPlayer();
+	}
+
+	function getPlayerData($name)
+	{
+		require_once("connect.php");
+		$dbo = getDBO("map");
+
+		$sqlRequest = "SELECT * FROM `players` WHERE `Name`=:name";
+		$stmt = $dbo->prepare($sqlRequest);
+		$stmt->bindParam(":name", $name);
+		$stmt->execute();
+
+		return $stmt->fetch();
 	}
 
 	function selectNextPlayer() //Selects the next player to make a turn

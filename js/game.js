@@ -41,7 +41,7 @@ function setupHex()
 		}
 	}
 
-	window.onunload = exitGame;
+	window.onbeforeunload = exitGame;
 
 }
 function loadSprites()
@@ -80,7 +80,12 @@ function loadSprites()
 	buildingData[0] = {
 		SID: sprite,
 		reqTiles: [],
-		reqNeighbours: []
+		reqNeighbours: [],
+
+		oilCost: 500,
+		foodCost: 1000,
+		metalCost: 1000,
+		crystalCost: 50
 	};
 	//Oil rig thing
 	sprite = createSprite("img/olja.png");
@@ -88,7 +93,11 @@ function loadSprites()
 	buildingData[1] = {
 		SID: sprite,
 		reqTiles: [2],
-		reqNeighbours: []
+		reqNeighbours: [],
+		oilCost: 0,
+		foodCost: 250,
+		metalCost: 300,
+		crystalCost: 100
 	};
 	//Oil rig thing
 	sprite = createSprite("img/Building3.png");
@@ -96,14 +105,22 @@ function loadSprites()
 	buildingData[2] = {
 		SID: sprite,
 		reqTiles: [],
-		reqNeighbours: [0]
+		reqNeighbours: [0],
+		oilCost: 200,
+		foodCost: 200,
+		metalCost: 550,
+		crystalCost: 350
 	};
 	sprite = createSprite("img/GroundCrystalMine.png");
 	setSpriteScale(sprite, 256, 256);
 	buildingData[3] = {
 		SID: sprite,
 		reqTiles: [3],
-		reqNeighbours: [0]
+		reqNeighbours: [0],
+		oilCost:300,
+		foodCost: 250,
+		metalCost: 300,
+		crystalCost: 0
 	};
 }
 
@@ -224,15 +241,38 @@ function addTurnBuilding(type, x, y)
 		}
 	}
 
+	if(canAffordBuilding(type) == false)
+	{
+		canBePlaced = false;
+	}
+
 	//If the tile can be placed
 	if(canBePlaced)
 	{
+		//removing the cost of the building
+		setOil(getOil() - buildingData[type].oilCost);
+		setFood(getFood() - buildingData[type].foodCost);
+		setMetal(getMetal() - buildingData[type].metalCost);
+		setCrystal(getCrystal() - buildingData[type].crystalCost);
+
 		turnBuildings[turnBuildings.length] = {
 			type: type,
 			x: x,
 			y: y
 		};
 	}
+}
+function canAffordBuilding(buildingID)
+{
+	result = true
+
+	if(buildingData[buildingID].oilCost > getOil()) result = false;
+	if(buildingData[buildingID].foodCost > getFood()) result = false;
+	if(buildingData[buildingID].crystalCost > getCrystal()) result = false;
+	if(buildingData[buildingID].metalCost > getMetal()) result = false;
+
+	return result;
+
 }
 function getTurnBuildingAmount()
 {

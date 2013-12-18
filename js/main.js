@@ -6,7 +6,7 @@ var lastUpdateRequest = 0;
 var requestInterval = 1000; //The amount of time in miliseconds to wait before making a new uptade request
 
 var lastMapRequest = 0;
-var mapUpdateInterval = 2000;
+var mapUpdateInterval = 5000;
 
 var selTool = 0;
 var selID = 0;
@@ -71,15 +71,19 @@ function mainLoop()
 
 function requestMap()
 {
-	//Requesting map data
-
 	createRequest("requests.php", "type=r_mapData", function(result){
+		console.log(result);
 		handleMapData(result);
 	});
 
 	//Requesting building data
 	createRequest("requests.php", "type=r_buildingData", function(result){
 		handleBuildingData(result);
+	});
+
+	//Requesting resources
+	createRequest("requests.php", "type=r_resourceData", function(result){
+		handleResourceData(result);
 	});
 }
 
@@ -176,6 +180,40 @@ function handleBuildingData(data)
 	}
 }
 
+function handleResourceData(data)
+{
+	//Works the same way as handleBuildingData
+
+	var resourceStr = data.split("|");
+
+	for(var i = 0; i < resourceStr.length; i++)
+	{
+		varArray = separateVariables(resourceStr[i]);
+
+		for(var n = 0; n < varArray.length; n++) //Going thru all the variables in the data section
+		{
+			var varType = getVarType(varArray[n]);
+			var varValue = getVarValue(varArray[n]);
+
+			if(varType == "oil")
+			{
+				setOil(parseInt(varValue));
+			}
+			if(varType == "food")
+			{
+				setFood(parseInt(varValue));
+			}
+			if(varType == "crystal")
+			{
+				setCrystal(parseInt(varValue));
+			}
+			if(varType == "metal")
+			{
+				setMetal(parseInt(varValue));
+			}
+		}
+	}
+}
 function onTurnUpdate(data) //Function to run when a response from an update request has been sent
 {
 	if(data == "waitingForOthers") //If it is not the clients turn
@@ -185,9 +223,8 @@ function onTurnUpdate(data) //Function to run when a response from an update req
 	else if(data == "makeTurn") //If its the clients turn
 	{
 		gameState = 1;
+		requestMap(); //Sending a request for the updated map
 	}
-
-	requestMap(); //Sending a request for the updated map
 }
 
 var endRequest;

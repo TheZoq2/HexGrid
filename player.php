@@ -52,10 +52,18 @@
 				}
 				else
 				{
+					$startOil = 2000;
+					$startCrystal = 200;
+					$startMetal = 2000;
+					$startFood = 1500;
 					//The player does not exist already, we can create it
-					$sqlRequest = "INSERT INTO `players`(`ID`, `Name`) VALUES ('',:name)";
+					$sqlRequest = "INSERT INTO `players`(`ID`, `Name`, `oil`, `crystal`, `metal`, `food`) VALUES ('',:name,:oil,:crystal,:metal,:food)";
 					$stmt = $dbo->prepare($sqlRequest);
 					$stmt->bindParam(":name", $playerName);
+					$stmt->bindParam(":oil", $startOil);
+					$stmt->bindParam(":crystal", $startCrystal);
+					$stmt->bindParam(":metal", $startMetal);
+					$stmt->bindParam(":food", $startFood);
 					$stmt->execute();
 
 					$_SESSION["Player"] = $playerName; //Saving the name of the client in the session variable

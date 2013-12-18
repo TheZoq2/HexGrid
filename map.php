@@ -15,6 +15,90 @@
 			return $this->type;
 		}
 	}
+	class BuildingBase
+	{
+		public $food;
+		public $oil;
+		public $metal;
+		public $crystal;
+
+		function __construct($oil, $food, $metal, $crystal)
+		{
+			$this->food = $food;
+			$this->oil = $oil;
+			$this->metal = $metal;
+			$this->crystal = $crystal;
+		}
+
+		public function getFood()
+		{
+			return $this->food;
+		}
+		public function getOil()
+		{
+			return $this->oil;
+		}
+		public function getMetal()
+		{
+			return $this->metal;
+		}
+		public function getCrystal()
+		{
+			return $this->crystal;
+		}
+
+		public function setFood($food)
+		{
+			$this->food = $food;
+		}
+		public function setOil($oil)
+		{
+			$this->oil = $oil;
+		}
+		public function setMetal($metal)
+		{
+			$this->metal = $metal;
+		}
+		public function setCrystal($crystal)
+		{
+			$this->crystal = $crystal;
+		}
+	}
+
+	$buildings = array();
+
+	$buildingData[0] = new BuildingBase(500, 1000, 1000, 50);
+	$buildingData[1] = new BuildingBase(0, 250, 30, 100);
+	$buildingData[2] = new BuildingBase(200, 200, 550, 350);
+	$buildingData[3] = new BuildingBase(300, 250, 300, 0);
+
+	if(isset($_SESSION["explored"]))
+	{
+		//Checking the size of the map
+		$_SESSION["explored"] = array();
+
+		require_once("connect.php");
+		$dbo = $getDBO("map");
+		
+		$sqlRequest = "SELECT * FROM `base` WHERE 1";
+
+		$stmt = $dbo->prepare($sqlRequest);
+		$stmt->execute();
+		$baseResult = $stmt->fetch();
+
+		$sizeX = $baseResult["sizeX"];
+		$sizeY = $baseResult["sizeY"];
+
+		//creating a 2d array with those slots in them
+		for($x = 0; $x < $sizeX; $x++)
+		{
+			$_SESSION["explored"][$x] = array();
+			for($y = 0; $y < $sizeY; $y++)
+			{
+				$_SESSION["explored"][$x][$y] = 0;
+			}
+		}
+	}
 
 	function generateMap($sizeX, $sizeY)
 	{
@@ -74,8 +158,12 @@
 				$stmt->execute();
 				*/
 
-				$sqlRequest = "UPDATE `tile` SET `posX`=" . $x . ",`posY`= " . $y . ",`type`=" . $type . " WHERE `id`=" . $cID . ";";
+				$sqlRequest = "UPDATE `tile` SET `posX`=:x,`posY`=:y,`type`=:type WHERE `id`=:cID;";
 				$stmt = $dbh->prepare($sqlRequest);
+				$stmt->bindParam(":x", $x);
+				$stmt->bindParam(":y", $y);
+				$stmt->bindParam(":type", $type);
+				$stmt->bindParam(":cID", $cID);
 				$stmt->execute();
 
 				$cID++;

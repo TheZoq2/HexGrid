@@ -11,7 +11,6 @@
         //Go to registration
         header('Location:player.php');
     }
-
 ?>
 
 <!DOCTYPE html>
@@ -33,6 +32,7 @@
         <script src="js/requests.js"></script>
         <script src="js/dataReader.js"></script>
         <script src="js/UI.js"></script>
+        <script src="js/resources.js"></script>
     </head>
     <body>
         <div class="wrapper">
@@ -42,10 +42,18 @@
         </div>
 
         <div id="UI_resources">
-            <div class="UI_resource"><p class="UI_resource_p"><img src="img/UI/Apple.png"/> :0</p></div>
-            <div class="UI_resource"><p class="UI_resource_p"><img src="img/UI/Ingot.png"/> :0</p></div>
-            <div class="UI_resource"><p class="UI_resource_p"><img src="img/UI/Crystal.png"/> :0</p></div>
-            <div class="UI_resource"><p class="UI_resource_p"><img src="img/UI/Oil.png"/> :0</p></div>
+            <div class="UI_resource"> 
+                <img src="img/UI/Apple.png" class="UI_resourceImg"/> <p class="UI_resource_p" id="UI_food"> :0</p>
+            </div>
+            <div class="UI_resource">
+                <img src="img/UI/Ingot.png" class="UI_resourceImg"/> <p class="UI_resource_p" id="UI_metal"> :0</p>
+            </div>
+            <div class="UI_resource">
+                <img src="img/UI/Crystal.png" class="UI_resourceImg"/> <p class="UI_resource_p" id="UI_crystal"> :0</p>
+            </div>
+            <div class="UI_resource">
+                <img src="img/UI/Oil.png" class="UI_resourceImg"/> <p class="UI_resource_p" id="UI_oil">:0</p>
+            </div>
         </div>
 
         <div id="UI_rightBar">

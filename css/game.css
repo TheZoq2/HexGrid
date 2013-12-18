@@ -35,6 +35,10 @@
 
 	background-color: #ffffff;
 }
+.UI_resourceImg
+{
+	float: left;
+}
 .UI_resource
 {
 	float: left;
@@ -43,6 +47,7 @@
 .UI_resource_p
 {
 	font-size: 32px;
+	float: left;
 }
 
 #UI_b_endTurn
