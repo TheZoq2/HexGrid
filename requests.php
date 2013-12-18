@@ -59,61 +59,7 @@
 		}
 		if($_POST["type"] == "r_mapData")
 		{
-			require_once("map.php");
-
-			//Connecting to the map database
-			require_once("connect.php");
-			$dbo = getDBO("map");
-
-			//Getting the basic info about the map
-			$sqlRequest = "SELECT * FROM `base` WHERE 1";
-			$stmt = $dbo->prepare($sqlRequest);
-			$stmt->execute();
-
-			$data = $stmt->fetch();
-			//Saving the data about the map
-			$sizeX = $data["sizeX"];
-			$sizeY = $data["sizeY"];
-
-			//Requesting the actual map data
-			$sqlRequest = "SELECT * FROM `tile` WHERE 1";
-			$stmt = $dbo->prepare($sqlRequest);
-			$stmt->execute();
-
-			$mapData = $stmt->fetchAll();
-
-			$map = array();
-			for($x = 0; $x < $sizeX; $x++)
-			{
-				$map[$x] = array();
-			}
-
-			//Going though the data
-			foreach ($mapData as $tile) 
-			{
-				$map[$tile["posX"]][$tile["posY"]] = new Tile();
-				$map[$tile["posX"]][$tile["posY"]]->setType($tile["type"]);
-			}
-
-			//Creating a string with the data to return
-			$responseString = "";
-
-			//Adding the base data
-			$responseString .= "sizeX=" . $sizeX;
-			$responseString .= ",sizeY=" . $sizeY;
-
-			for($x = 0; $x < $sizeX; $x++)
-			{
-				for($y = 0; $y < $sizeY; $y++)
-				{
-					$responseString .= "|";
-					$responseString .= "posX=" . $x;
-					$responseString .= ",posY=". $y;
-					$responseString .= ",type=". $map[$x][$y]->getType();
-				}
-			}
-
-			echo $responseString; //Returning the string
+			returnMapData();
 			exit();
 		}
 		if($_POST["type"] == "r_buildingData")
@@ -169,6 +115,73 @@
 
 		$stmt = $dbo->prepare($sqlRequest);
 		$stmt->execute();
+	}
+
+	function returnMapData()
+	{
+		require_once("map.php");
+
+		//Connecting to the map database
+		require_once("connect.php");
+		$dbo = getDBO("map");
+
+		//Getting the basic info about the map
+		$sqlRequest = "SELECT * FROM `base` WHERE 1";
+		$stmt = $dbo->prepare($sqlRequest);
+		$stmt->execute();
+
+		$data = $stmt->fetch();
+		//Saving the data about the map
+		$sizeX = $data["sizeX"];
+		$sizeY = $data["sizeY"];
+
+		//Requesting the actual map data
+		$sqlRequest = "SELECT * FROM `tile` WHERE 1";
+		$stmt = $dbo->prepare($sqlRequest);
+		$stmt->execute();
+
+		$mapData = $stmt->fetchAll();
+
+		$map = array();
+		for($x = 0; $x < $sizeX; $x++)
+		{
+			$map[$x] = array();
+		}
+
+		//Going though the data
+		foreach ($mapData as $tile) 
+		{
+			$map[$tile["posX"]][$tile["posY"]] = new Tile();
+			$map[$tile["posX"]][$tile["posY"]]->setType($tile["type"]);
+		}
+
+		//Creating a string with the data to return
+		$responseString = "";
+
+		//Adding the base data
+		$responseString .= "sizeX=" . $sizeX;
+		$responseString .= ",sizeY=" . $sizeY;
+
+		for($x = 0; $x < $sizeX; $x++)
+		{
+			for($y = 0; $y < $sizeY; $y++)
+			{
+				$responseString .= "|";
+				$responseString .= "posX=" . $x;
+				$responseString .= ",posY=". $y;
+				$responseString .= ",type=". $map[$x][$y]->getType();
+
+				//Checking if the map is revealed
+				if(isset($_SESSION["explored"][$x][$y]))
+				{
+					$revealed = $_SESSION["explored"][$x][$y];
+
+					$responseString .=",explored=" . $revealed;
+				}
+			}
+		}
+
+		echo $responseString; //Returning the string
 	}
 
 	function returnBuildingData()
@@ -278,6 +291,16 @@
 			if($bType != -1) //Making sure the type actually exists
 			{
 				$newBuildings[$cBuilding] = new Building($bType, $bX, $bY);
+
+				//Revealing the surrounded area
+				require_once("functions.php");
+
+				$neighbours = getNeighbours($bX, $bY);
+
+				for($i = 0; $i < count($neighbours); $i++)
+				{
+					$_SESSION["explored"][$neighbours[$i][0]][$neighbours[$i][1]] = 2;
+				}
 			}
 			$cBuilding++;
 		}

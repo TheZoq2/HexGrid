@@ -105,6 +105,7 @@ function handleMapData(data) //Takes care of map data that is returned from the 
 		var posX = -1;
 		var posY = -1;
 		var type = 0;
+		var visible = 0;
 
 		var varArray = separateVariables(strings[i]);
 		for(var n = 0; n < varArray.length; n++)
@@ -126,11 +127,16 @@ function handleMapData(data) //Takes care of map data that is returned from the 
 			{
 				type = parseInt(varValue);
 			}
+			if(varType == "explored")
+			{
+				visible = parseInt(varValue);
+			}
 		}
 
 		if(posX != -1 && posY != - 1) //Making sure no data is misisng
 		{
 			grid[posX][posY].type = type;
+			grid[posX][posY].visible = visible;
 		}
 	}
 }

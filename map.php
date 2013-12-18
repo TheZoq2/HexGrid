@@ -22,6 +22,8 @@
 		public $metal;
 		public $crystal;
 
+		public $sightRange;
+
 		function __construct($oil, $food, $metal, $crystal)
 		{
 			$this->food = $food;
@@ -46,6 +48,10 @@
 		{
 			return $this->crystal;
 		}
+		public function getSightRange()
+		{
+			return $this->sightRange;
+		}
 
 		public function setFood($food)
 		{
@@ -63,22 +69,33 @@
 		{
 			$this->crystal = $crystal;
 		}
+		public function setSightRange($sightRange)
+		{
+			$this->sightRange = $sightRange;
+		}
 	}
 
 	$buildings = array();
 
 	$buildingData[0] = new BuildingBase(500, 1000, 1000, 50);
-	$buildingData[1] = new BuildingBase(0, 250, 30, 100);
-	$buildingData[2] = new BuildingBase(200, 200, 550, 350);
-	$buildingData[3] = new BuildingBase(300, 250, 300, 0);
+	$buildingData[0]->setSightRange(3);
 
-	if(isset($_SESSION["explored"]))
+	$buildingData[1] = new BuildingBase(0, 250, 30, 100);
+	$buildingData[1]->setSightRange(2);
+
+	$buildingData[2] = new BuildingBase(200, 200, 550, 350);
+	$buildingData[2]->setSightRange(2);
+
+	$buildingData[3] = new BuildingBase(300, 250, 300, 0);
+	$buildingData[3]->setSightRange(2);
+
+	if(isset($_SESSION["explored"]) == false)
 	{
 		//Checking the size of the map
 		$_SESSION["explored"] = array();
 
 		require_once("connect.php");
-		$dbo = $getDBO("map");
+		$dbo = getDBO("map");
 		
 		$sqlRequest = "SELECT * FROM `base` WHERE 1";
 
@@ -95,7 +112,7 @@
 			$_SESSION["explored"][$x] = array();
 			for($y = 0; $y < $sizeY; $y++)
 			{
-				$_SESSION["explored"][$x][$y] = 0;
+				$_SESSION["explored"][$x][$y] = 0; //Will be 0 for unseen, 1 for revelaed and 2 for visible
 			}
 		}
 	}

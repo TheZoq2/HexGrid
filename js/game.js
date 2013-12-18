@@ -85,7 +85,9 @@ function loadSprites()
 		oilCost: 500,
 		foodCost: 1000,
 		metalCost: 1000,
-		crystalCost: 50
+		crystalCost: 50,
+
+		sightRange: 3
 	};
 	//Oil rig thing
 	sprite = createSprite("img/olja.png");
@@ -97,7 +99,9 @@ function loadSprites()
 		oilCost: 0,
 		foodCost: 250,
 		metalCost: 300,
-		crystalCost: 100
+		crystalCost: 100,
+
+		sightRange: 2
 	};
 	//Oil rig thing
 	sprite = createSprite("img/Building3.png");
@@ -109,7 +113,9 @@ function loadSprites()
 		oilCost: 200,
 		foodCost: 200,
 		metalCost: 550,
-		crystalCost: 350
+		crystalCost: 350,
+
+		sightRange: 2
 	};
 	sprite = createSprite("img/GroundCrystalMine.png");
 	setSpriteScale(sprite, 256, 256);
@@ -120,7 +126,9 @@ function loadSprites()
 		oilCost:300,
 		foodCost: 250,
 		metalCost: 300,
-		crystalCost: 0
+		crystalCost: 0,
+
+		sightRange: 2
 	};
 }
 
@@ -142,12 +150,15 @@ function drawHex()
 			var yCoord = y * tileHeight * 3/4;
 			if(xCoord > getScreenStartX() - tileWidth && xCoord < getScreenEndX() + tileWidth && yCoord > getScreenStartY() - tileHeight && yCoord < getScreenEndY() + tileHeight)
 			{
-				var tileType = grid[x][y].type;
-				setSpritePosition(tileSprites[tileType], xCoord, yCoord);
-				setSpritePosition(borderSprite, xCoord, yCoord);
+				if(grid[x][y].visible != 0)
+				{
+					var tileType = grid[x][y].type;
+					setSpritePosition(tileSprites[tileType], xCoord, yCoord);
+					setSpritePosition(borderSprite, xCoord, yCoord);
 
-				drawSprite(tileSprites[tileType]);
-				drawSprite(borderSprite);
+					drawSprite(tileSprites[tileType]);
+					drawSprite(borderSprite);
+				}
 			}
 		}
 	}
@@ -355,7 +366,9 @@ function setGridSize(xSize, ySize)
 		for(var x = 0; x < xSize; x++) //Going through the x axis
 		{
 			grid[y][x] = {
-				type: 0
+				type: 0,
+
+				visible: 0
 			};
 		}
 	}
