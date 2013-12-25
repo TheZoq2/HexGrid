@@ -31,7 +31,7 @@ function setupHex()
 {
 	loadSprites();
 
-	setGridSize(25, 25);
+	setGridSize(100, 100);
 
 	for(var y = 0; y < grid.length; y++)
 	{
@@ -150,7 +150,7 @@ function drawHex()
 			var yCoord = y * tileHeight * 3/4;
 			if(xCoord > getScreenStartX() - tileWidth && xCoord < getScreenEndX() + tileWidth && yCoord > getScreenStartY() - tileHeight && yCoord < getScreenEndY() + tileHeight)
 			{
-				if(grid[x][y].visible != 0)
+				if(grid[x][y].visible != 111)
 				{
 					var tileType = grid[x][y].type;
 					setSpritePosition(tileSprites[tileType], xCoord, yCoord);

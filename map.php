@@ -159,8 +159,10 @@
 		//$stmt = $dbh->prepare($sqlRequest);
 
 		//Deleting the tile table
-		$sqlRequest = "DELETE FROM `tile` WHERE 1"
+		$sqlRequest = "DELETE FROM `tile` WHERE 1";
 		$stmt = $dbh->prepare($sqlRequest);
+
+		$sqlRequest = "INSERT INTO `tile`(`posX`, `posY`, `type`) VALUES (:x,:y,:type)";
 
 		for($y = 0; $y < $sizeY; $y++)
 		{
@@ -184,7 +186,7 @@
 				$stmt->bindParam(":x", $x);
 				$stmt->bindParam(":y", $y);
 				$stmt->bindParam(":type", $type);
-				$stmt->bindParam(":cID", $cID);
+				//$stmt->bindParam(":cID", $cID);
 				$stmt->execute();
 
 				$cID++;
