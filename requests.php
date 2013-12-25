@@ -295,12 +295,9 @@
 				//Revealing the surrounded area
 				require_once("functions.php");
 
-				$neighbours = getNeighbours($bX, $bY);
+				require_once("map.php");
 
-				for($i = 0; $i < count($neighbours); $i++)
-				{
-					$_SESSION["explored"][$neighbours[$i][0]][$neighbours[$i][1]] = 2;
-				}
+				exploreAround($bX, $bY, $buildingData[$bType]->getSightRange());
 			}
 			$cBuilding++;
 		}

@@ -1,7 +1,7 @@
 <?php
     require_once("map.php");
 
-    //generateMap(25, 25);
+    generateMap(100, 100);
 
     //Checking if the client has a player
     session_start();

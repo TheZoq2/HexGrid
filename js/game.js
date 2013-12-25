@@ -75,7 +75,7 @@ function loadSprites()
 	//Setting data for the buildings
 
 	//Satelite
-	var sprite = createSprite("img/satelite.png");
+	var sprite = createSprite("img/Satelite.png");
 	setSpriteScale(sprite, 256, 256);
 	buildingData[0] = {
 		SID: sprite,

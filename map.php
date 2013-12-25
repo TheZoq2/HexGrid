@@ -158,6 +158,10 @@
 		//$sqlRequest = "UPDATE `tile` SET `posX`=:posX,`posY`=:posY,`type`=:type WHERE `id`=:ID;";
 		//$stmt = $dbh->prepare($sqlRequest);
 
+		//Deleting the tile table
+		$sqlRequest = "DELETE FROM `tile` WHERE 1"
+		$stmt = $dbh->prepare($sqlRequest);
+
 		for($y = 0; $y < $sizeY; $y++)
 		{
 			for($x = 0; $x < $sizeX; $x++)
@@ -175,7 +179,7 @@
 				$stmt->execute();
 				*/
 
-				$sqlRequest = "UPDATE `tile` SET `posX`=:x,`posY`=:y,`type`=:type WHERE `id`=:cID;";
+				//$sqlRequest = "UPDATE `tile` SET `posX`=:x,`posY`=:y,`type`=:type WHERE `id`=:cID;";
 				$stmt = $dbh->prepare($sqlRequest);
 				$stmt->bindParam(":x", $x);
 				$stmt->bindParam(":y", $y);
