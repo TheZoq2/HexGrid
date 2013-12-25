@@ -6,6 +6,10 @@
     //Checking if the client has a player
     session_start();
 
+    //unset($_SESSION["explored"]);
+
+    require_once("functions.php");
+
     if(isset($_SESSION["Player"]) == false)
     {
         //Go to registration
